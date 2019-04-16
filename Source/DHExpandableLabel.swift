@@ -183,12 +183,12 @@ open class DHExpandableLabel: UILabel {
         if let ellipsis = self.ellipsis {
             linkText.append(ellipsis)
             if shouldAddSpaceBetweenEllipsisAndMore {
-                linkText.append(NSAttributedString(string: " ", attributes: [.font: font]))
+                linkText.append(NSAttributedString(string: " ", attributes: [.font: font!]))
             }
         }
         linkText.append(linkName)
         while shouldTrimLeftSpace && lineText.string.hasSuffix(" ") {
-            lineText = lineText.attributedSubstring(from: NSRange(location: 0, length: lineText.string.endIndex.encodedOffset - 1))
+            lineText = lineText.attributedSubstring(from: NSRange(location: 0, length: lineText.string.utf16.count - 1))
         }
 
         var lineTextWithLink = NSMutableAttributedString(attributedString: lineText)
@@ -203,7 +203,7 @@ open class DHExpandableLabel: UILabel {
             var lineTextWithLastWordRemoved = lineText.attributedSubstring(from: NSRange(location: 0, length: subRange.location))
             if self.shouldTrimLeftSpace {
                 while lineTextWithLastWordRemoved.string.hasSuffix(" ") {
-                    lineTextWithLastWordRemoved = lineTextWithLastWordRemoved.attributedSubstring(from: NSRange(location: 0, length: lineTextWithLastWordRemoved.string.endIndex.encodedOffset - 1))
+                    lineTextWithLastWordRemoved = lineTextWithLastWordRemoved.attributedSubstring(from: NSRange(location: 0, length: lineTextWithLastWordRemoved.string.utf16.count - 1))
                 }
             }
 
@@ -236,13 +236,13 @@ open class DHExpandableLabel: UILabel {
         if let ellipsis = self.ellipsis {
             linkText.append(ellipsis)
             if shouldAddSpaceBetweenEllipsisAndMore {
-                linkText.append(NSAttributedString(string: " ", attributes: [.font: font]))
+                linkText.append(NSAttributedString(string: " ", attributes: [.font: font!]))
             }
         }
         linkText.append(linkName)
         var numberCharacterWillDelete: Int = 0
         repeat {
-            let newLength = lineTextTrimmedNewLines.string.endIndex.encodedOffset - numberCharacterWillDelete
+            let newLength = lineTextTrimmedNewLines.string.utf16.count - numberCharacterWillDelete
             let truncatedString = lineTextTrimmedNewLines.attributedSubstring(from: NSRange(location: 0, length: newLength))
 
             if (shouldTrimLeftSpace && !truncatedString.string.hasSuffix(" ")) ||
@@ -255,7 +255,7 @@ open class DHExpandableLabel: UILabel {
                 }
             }
             numberCharacterWillDelete += 1
-        } while numberCharacterWillDelete < lineText.string.endIndex.encodedOffset
+        } while numberCharacterWillDelete < lineText.string.utf16.count
         lineTextTrimmedNewLines.append(linkText)
         return lineTextTrimmedNewLines
     }
@@ -337,7 +337,7 @@ open class DHExpandableLabel: UILabel {
         var lineHeightMultiple: CGFloat = 0
         var lineSpacing: CGFloat = 0
         for index in 0..<text.length {
-            if let style = text.attribute(NSAttributedStringKey.paragraphStyle, at: index, effectiveRange: nil) as? NSParagraphStyle {
+            if let style = text.attribute(NSAttributedString.Key.paragraphStyle, at: index, effectiveRange: nil) as? NSParagraphStyle {
                 lineHeightMultiple = max(lineHeightMultiple, style.lineHeightMultiple)
                 lineSpacing = max(lineHeightMultiple, style.lineSpacing)
             }
@@ -396,7 +396,7 @@ open class DHExpandableLabel: UILabel {
         textStorage.addLayoutManager(layoutManager)
 
         textContainer.lineFragmentPadding = 0.0
-        textContainer.lineBreakMode = label.lineBreakMode
+//        textContainer.lineBreakMode = label.lineBreakMode
         textContainer.heightTracksTextView = true
         textContainer.maximumNumberOfLines = label.numberOfLines
         let labelSize = label.bounds.size
@@ -424,7 +424,7 @@ open class DHExpandableLabel: UILabel {
         setLinkHighlighted(touches, event: event, highlighted: false)
     }
 
-    open func setLessLinkWith(lessLink: String, attributes: [NSAttributedStringKey: Any], position: NSTextAlignment?) {
+    open func setLessLinkWith(lessLink: String, attributes: [NSAttributedString.Key: Any], position: NSTextAlignment?) {
         var alignedattributes = attributes
         if let pos = position {
             expandedLinkPosition = pos

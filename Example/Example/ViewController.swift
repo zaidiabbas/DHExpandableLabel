@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 2
         style.lineHeightMultiple = 1.2
-        let attributed: [NSAttributedStringKey: Any] = [.font: label.font, .paragraphStyle: style]
+        let attributed: [NSAttributedString.Key: Any] = [.font: label.font!, .paragraphStyle: style]
 
         label.numberOfLines = 2
 

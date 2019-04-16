@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   s.homepage = "https://ggwp.io"
   s.platform = :ios, "8.0"
-  s.swift_version = '4.0'
+  s.swift_version = '5.0'
   s.license = { :type => "MIT", :file => "LICENSE" }
   s.author = { "Dai Ho V" => "vandai06n@gmail.com" }
   s.social_media_url = "https://github.com/mrvandai"
